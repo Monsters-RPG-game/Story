@@ -1,0 +1,4 @@
+{
+  "amqpURI": "rabbitUrl",
+  "mongoURI": "mongodb://user:password@localhost:27017/Users"
+}
