@@ -16,12 +16,10 @@ export default class Handler {
 
   async npcStoryMessage(payload: types.IRabbitMessage): Promise<void> {
     switch (payload.subTarget) {
-      case enums.ENpcStoryTargets.AddNpcStory:
-        return this.npcStory.add(payload.payload, payload.user);
+      case enums.ENpcStoryTargets.GetNpcIntent:
+        return this.npcStory.getIntent(payload.payload, payload.user);
       case enums.ENpcStoryTargets.GetNpcStory:
         return this.npcStory.get(payload.payload, payload.user);
-      case enums.ENpcStoryTargets.AddManyNpcStory:
-        return this.npcStory.addMany(payload.payload);
       default:
         throw new errors.IncorrectTargetError();
     }

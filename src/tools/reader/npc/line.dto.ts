@@ -1,5 +1,5 @@
-import { ILine } from '../../../modules/npcStory/entity';
 import Validation from '../../validation';
+import type { ILine } from '../../../modules/npcStory/entity';
 
 export default class LineDto implements ILine {
   intent: string;

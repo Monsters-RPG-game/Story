@@ -4,7 +4,11 @@ import type { INpcStory } from './types';
 const linesSchema = new mongoose.Schema({
   intent: {
     type: String,
-    required: [true, 'line not provided'],
+    required: [true, 'Intent not provided'],
+  },
+  line: {
+    type: String,
+    required: [true, 'Line not provided'],
   },
 });
 
