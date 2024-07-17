@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import NpcStory from './model';
 import RoosterFactory from '../../tools/abstract/rooster';
-import type { ILine, INpcStoryEntity } from './entity';
+import type { INpcStoryEntity } from './entity';
 import type { IGetNpcIntentDto } from './getIntent/types';
-import type { INpcStory } from './types';
+import type { INpcStory, ILine } from './types';
 import type { EModules } from '../../tools/abstract/enums';
 
 export default class Rooster extends RoosterFactory<INpcStory, typeof NpcStory, EModules.NpcStory> {

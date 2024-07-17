@@ -1,14 +1,16 @@
 import * as errors from '../../errors';
 import FileVersionHandler from '../../modules/mainFile/handler';
+import StageDto from '../../modules/narratorStory/addMany/stageDto';
 import NarratorStoryHandler from '../../modules/narratorStory/handler';
 import NpcStoryHandler from '../../modules/npcStory/handler';
 import Log from '../logger';
-import type { IFileEntity, INpcEntry } from '../../modules/mainFile/entity';
-import type { INarratorEntity, INarratorEpisode } from '../../modules/narratorStory/entity';
+import type { IFileEntity } from '../../modules/mainFile/entity';
+import type { INpcEntry } from '../../modules/mainFile/types';
+import type { INarratorEntity } from '../../modules/narratorStory/entity';
+import type { INarratorEpisode } from '../../modules/narratorStory/types';
 import type { INpcStoryEntity } from '../../modules/npcStory/entity';
 import type * as types from '../../types';
 import fs from 'fs';
-import StageDto from '../../modules/narratorStory/addMany/stageDto';
 
 export default class Reader {
   private _path: string;
@@ -88,12 +90,11 @@ export default class Reader {
      * delete all records and create npc all over again
      */
     if (storedVersion && storedVersion.version !== this.fileEntity.version) {
-      // make sure version is higher
-      console.log('STORED VERSION',storedVersion)
       const value = this.compareVersion(storedVersion.version, this.fileEntity.version);
       if (value > 0) {
         throw new errors.VersionIncorrect();
       }
+
       await this.npcStoryHandler.deleteAll();
       await this.narratorStoryHandler.deleteAll();
       await this.saveNpcEntity();
@@ -153,7 +154,9 @@ export default class Reader {
       episode: parseInt(episodeNr),
       stages: newStages,
     };
-
+    if (this.narratorEntities.find((el) => el.episode === newNarrator.episode)) {
+      console.log('--------KUERWAA');
+    }
     this.narratorEntities.push(newNarrator);
   }
 
@@ -188,8 +191,6 @@ export default class Reader {
    * @returns -1 if version1<version2 , 0 if version1=version2, 1 if version1>version2
    */
   compareVersion(version1: string, version2: string): number {
-    console.log('VERSION',version1)
-    console.log('VERSION',version2)
     const v1Parts = version1.split('.').map(Number);
     const v2Parts = version2.split('.').map(Number);
     for (let i = 0; i < 3; i++) {

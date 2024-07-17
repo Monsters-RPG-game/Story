@@ -1,7 +1,4 @@
-export interface ILine {
-  intent: string;
-  line: string;
-}
+import { ILine } from "./types";
 
 export interface INpcStoryEntity {
   _id: string;

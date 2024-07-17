@@ -3,7 +3,7 @@ import ControllerFactory from '../../../tools/abstract/controller';
 import Rooster from '../rooster';
 import type { IGetNpcIntentDto } from './types';
 import type { EModules } from '../../../tools/abstract/enums';
-import type { ILine } from '../entity';
+import type { ILine } from '../types';
 
 export default class Controller extends ControllerFactory<EModules.NpcStory> {
   constructor() {

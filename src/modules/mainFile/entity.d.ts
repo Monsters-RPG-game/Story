@@ -1,8 +1,5 @@
-import type { INarratorEntry } from '../narratorStory/entity';
-
-export interface INpcEntry {
-  [id: string]: string;
-}
+import type { INpcEntry } from './types';
+import type { INarratorEntry } from '../narratorStory/types';
 
 export interface IFileEntity {
   version: string;

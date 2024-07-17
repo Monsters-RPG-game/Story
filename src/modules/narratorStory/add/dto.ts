@@ -1,6 +1,6 @@
 import Validation from '../../../tools/validation';
 import type { IAddNarratorStoryDto } from './types';
-import type { IChapter } from '../entity';
+import type { IChapter } from '../types';
 
 export default class AddNarratorStoryDto implements IAddNarratorStoryDto {
   stage: number;

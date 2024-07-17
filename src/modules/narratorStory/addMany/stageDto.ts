@@ -1,6 +1,6 @@
 import ChapterDto from './chapterDto';
 import Validation from '../../../tools/validation';
-import type { IChapter, IStage } from '../entity';
+import type { IChapter, IStage } from '../types';
 
 export default class StageDto implements IStage {
   stageNumber: number;

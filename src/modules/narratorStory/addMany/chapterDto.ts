@@ -1,5 +1,5 @@
 import Validation from '../../../tools/validation';
-import type { IChapter } from '../entity';
+import type { IChapter } from '../types';
 
 export default class ChapterDto implements IChapter {
   chapter: number;
