@@ -2,4 +2,5 @@
 export enum EModules {
   NpcStory = 'npcStory',
   IndexFile = 'indexFile',
+  NarratorStory = 'narratorStory',
 }

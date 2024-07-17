@@ -1,17 +1,17 @@
-// import FakeInventory from './inventory';
+import FakeNpcStory from './npcStory';
 
 export default class FakeFactory {
-  // private readonly _user: FakeUser;
+  private readonly _npcStory: FakeNpcStory;
 
   constructor() {
-    // this._user = new FakeUser();
+    this._npcStory = new FakeNpcStory();
   }
 
-  // get user(): FakeUser {
-  //   return this._user;
-  // }
+  public get npcStory(): FakeNpcStory {
+    return this._npcStory;
+  }
 
   async cleanUp(): Promise<void> {
-    // await this.user.cleanUp();
+    await this.npcStory.cleanUp();
   }
 }
