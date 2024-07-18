@@ -81,7 +81,7 @@ export default class Reader {
     if (!storedVersion) {
       await this.saveNarratorEntity();
       await this.saveFileVersion();
-      await this.saveNpcEntity();
+      // await this.saveNpcEntity();
     }
 
     /**
@@ -97,7 +97,7 @@ export default class Reader {
 
       await this.npcStoryHandler.deleteAll();
       await this.narratorStoryHandler.deleteAll();
-      await this.saveNpcEntity();
+      // await this.saveNpcEntity();
       await this.saveNarratorEntity();
       await this.fileHandler.update({ id: storedVersion._id, version: this.fileEntity.version });
     }
@@ -155,8 +155,29 @@ export default class Reader {
       stages: newStages,
     };
     if (this.narratorEntities.find((el) => el.episode === newNarrator.episode)) {
-      console.log('--------KUERWAA');
+      throw new errors.NarratorEpisodePresent();
     }
+    this.narratorEntities.map((el) => {
+      const count: number[] = [];
+      el.stages.map((stage) => {
+        if (count.includes(stage.stageNumber)) {
+          throw new errors.StageNumberPresent();
+        } else {
+          const chapterCount: number[] = [];
+          stage.chapters.map((chap) => {
+            if (chapterCount.includes(chap.chapter)) {
+              throw new errors.ChapterNumberPresent();
+            } else {
+              chapterCount.push(chap.chapter);
+              return chap;
+            }
+          });
+          count.push(stage.stageNumber);
+          return stage;
+        }
+      });
+      return el;
+    });
     this.narratorEntities.push(newNarrator);
   }
 

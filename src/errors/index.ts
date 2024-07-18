@@ -198,3 +198,30 @@ export class VersionIncorrect extends FullError {
     this.status = 400;
   }
 }
+export class NarratorEpisodePresent extends FullError {
+  constructor() {
+    super('NarratorEpisodePresent');
+    this.message = 'Passed narrator episode is already present';
+    this.name = 'NarratorEpisodePresent';
+    this.code = '020';
+    this.status = 400;
+  }
+}
+export class StageNumberPresent extends FullError {
+  constructor() {
+    super('StageNumberPresent');
+    this.message = 'Stage number passed is already present in scope of this stage';
+    this.name = 'StageNumberPresent';
+    this.code = '021';
+    this.status = 400;
+  }
+}
+export class ChapterNumberPresent extends FullError {
+  constructor() {
+    super('ChapterNumberPresent');
+    this.message = 'Chapter number passed is already present in scope of this chapter';
+    this.name = 'ChapterNumberPresent';
+    this.code = '022';
+    this.status = 400;
+  }
+}
