@@ -1,7 +1,7 @@
 import AddController from './add';
 import AddManyController from './addMany';
-import GetController from './get';
 import DeleteAllController from './deleteAll';
+import GetController from './get';
 import * as enums from '../../enums';
 import HandlerFactory from '../../tools/abstract/handler';
 import State from '../../tools/state';

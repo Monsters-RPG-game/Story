@@ -10,6 +10,8 @@ export default class AddFileVersionDto implements IAddFileVersionDto {
   }
 
   validate(): void {
-    new Validation(this.version, 'version').isDefined().isRegexCompatible(/^\d+\.\d+\.\d+$/u, 'wrong format of a version string');
+    new Validation(this.version, 'version')
+      .isDefined()
+      .isRegexCompatible(/^\d+\.\d+\.\d+$/u, 'wrong format of a version string');
   }
 }

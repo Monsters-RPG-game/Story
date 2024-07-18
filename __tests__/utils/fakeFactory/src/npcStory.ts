@@ -1,12 +1,14 @@
 import TemplateFactory from './abstracts';
 import NpcStory from '../../../../src/modules/npcStory/model';
-import type { ILine, INpcStoryEntity } from '../../../../src/modules/npcStory/entity';
+import type { INpcStoryEntity } from '../../../../src/modules/npcStory/entity';
+import type { ILine } from '../../../../src/modules/npcStory/types';
 import type { EFakeData } from '../enums';
 import type { IAbstractBody } from '../types/data';
 
 export default class FakeNpcStory
   extends TemplateFactory<EFakeData.NpcStory>
-  implements IAbstractBody<INpcStoryEntity> {
+  implements IAbstractBody<INpcStoryEntity>
+{
   constructor() {
     super(NpcStory);
   }

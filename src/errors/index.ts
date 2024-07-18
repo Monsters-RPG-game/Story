@@ -225,3 +225,12 @@ export class ChapterNumberPresent extends FullError {
     this.status = 400;
   }
 }
+export class EpisodeNumberIncorrect extends FullError {
+  constructor() {
+    super('EpisodeNumberIncorrect');
+    this.message = 'Episode number in main file and in narrator file are different';
+    this.name = 'EpisodeNumberIncorrect';
+    this.code = '023';
+    this.status = 400;
+  }
+}

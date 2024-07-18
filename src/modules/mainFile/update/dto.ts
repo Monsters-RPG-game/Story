@@ -13,7 +13,9 @@ export default class UpdateFileVersionDto implements IUpdateFileVersionDto {
   }
 
   private validate(): void {
-    new Validation(this.version, 'version').isDefined().isRegexCompatible(/^\d+\.\d+\.\d+$/u, 'wrong format of a version string');
+    new Validation(this.version, 'version')
+      .isDefined()
+      .isRegexCompatible(/^\d+\.\d+\.\d+$/u, 'wrong format of a version string');
     new Validation(this.id, 'id').isDefined().isObjectId();
   }
 }

@@ -7,7 +7,6 @@ import Log from '../logger';
 import type { IFileEntity } from '../../modules/mainFile/entity';
 import type { INpcEntry } from '../../modules/mainFile/types';
 import type { INarratorEntity } from '../../modules/narratorStory/entity';
-import type { INarratorEpisode } from '../../modules/narratorStory/types';
 import type { INpcStoryEntity } from '../../modules/npcStory/entity';
 import type * as types from '../../types';
 import fs from 'fs';
@@ -73,15 +72,17 @@ export default class Reader {
       throw new errors.FileDoesNotExist();
     }
     this.fileEntity = file;
+    this.getNarratorFromFile();
     /**
      * We check if there is any main file stored,
      * if not then we populate db
      */
     const storedVersion = await this.fileHandler.get();
     if (!storedVersion) {
+      this.checkNarratorConsitency();
       await this.saveNarratorEntity();
       await this.saveFileVersion();
-      // await this.saveNpcEntity();
+      await this.saveNpcEntity();
     }
 
     /**
@@ -94,19 +95,17 @@ export default class Reader {
       if (value > 0) {
         throw new errors.VersionIncorrect();
       }
+      this.checkNarratorConsitency();
 
       await this.npcStoryHandler.deleteAll();
       await this.narratorStoryHandler.deleteAll();
-      // await this.saveNpcEntity();
+      await this.saveNpcEntity();
       await this.saveNarratorEntity();
       await this.fileHandler.update({ id: storedVersion._id, version: this.fileEntity.version });
     }
   }
 
   async saveNarratorEntity(): Promise<void> {
-    this.fileEntity.narrator.episodes.forEach((episode) => {
-      this.getNarratorFromFile(episode);
-    });
     try {
       await this.narratorStoryHandler.addMany({ narratorEntities: this.narratorEntities });
     } catch (err) {
@@ -135,32 +134,50 @@ export default class Reader {
     return version;
   }
 
-  getNarratorFromFile(episode: INarratorEpisode): void {
-    const episodeNr = Object.keys(episode)[0];
-    if (!episodeNr) throw new errors.EpisodeNumberNotExist();
-    const episodeFile = Object.values(episode)[0];
-    if (!episodeFile) throw new errors.EpisodeFileNotExist();
-    /**
-     * We create path to each narrator file based on main path
-     */
-    const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', episodeFile);
-    const entry = this.readNarratorEntity(newFilePathName, 2);
+  getNarratorFromFile(): void {
+    this.fileEntity.narrator.episodes.forEach((episode) => {
+      const episodeNr = Object.keys(episode)[0];
+      if (!episodeNr) throw new errors.EpisodeNumberNotExist();
 
-    const newStages = entry.stages.map((el) => {
-      return new StageDto(el);
+      const episodeFile = Object.values(episode)[0];
+      if (!episodeFile) throw new errors.EpisodeFileNotExist();
+      /**
+       * We create path to each narrator file based on main path
+       */
+      const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', episodeFile);
+
+      const entry = this.readNarratorEntity(newFilePathName, 2);
+      if (entry.episode !== parseInt(episodeNr)) {
+        throw new errors.EpisodeNumberIncorrect();
+      }
+
+      const newStages = entry.stages.map((el) => {
+        return new StageDto(el);
+      });
+
+      const newNarrator: Omit<INarratorEntity, '_id'> = {
+        episode: parseInt(episodeNr),
+        stages: newStages,
+      };
+      this.narratorEntities.push(newNarrator);
     });
+  }
 
-    const newNarrator: Omit<INarratorEntity, '_id'> = {
-      episode: parseInt(episodeNr),
-      stages: newStages,
-    };
-    if (this.narratorEntities.find((el) => el.episode === newNarrator.episode)) {
-      throw new errors.NarratorEpisodePresent();
-    }
+  checkNarratorConsitency(): void {
+    /**
+     * stageCount - checks for reapeting stage numbers
+     * episodeCount - checks for reapeting episode numbers
+     */
+    const episodeCount: number[] = [];
     this.narratorEntities.map((el) => {
-      const count: number[] = [];
+      const stageCount: number[] = [];
+      if (episodeCount.includes(el.episode)) {
+        throw new errors.NarratorEpisodePresent();
+      } else {
+        episodeCount.push(el.episode);
+      }
       el.stages.map((stage) => {
-        if (count.includes(stage.stageNumber)) {
+        if (stageCount.includes(stage.stageNumber)) {
           throw new errors.StageNumberPresent();
         } else {
           const chapterCount: number[] = [];
@@ -172,13 +189,12 @@ export default class Reader {
               return chap;
             }
           });
-          count.push(stage.stageNumber);
+          stageCount.push(stage.stageNumber);
           return stage;
         }
       });
       return el;
     });
-    this.narratorEntities.push(newNarrator);
   }
 
   getNpcFromFile(npcEntry: INpcEntry): void {

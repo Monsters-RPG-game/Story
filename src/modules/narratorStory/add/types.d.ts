@@ -1,4 +1,4 @@
-import type { IChapter } from '../entity';
+import type { IChapter } from '../types';
 
 export interface IAddNarratorStoryDto {
   stage: number;

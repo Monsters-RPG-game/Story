@@ -33,6 +33,19 @@ describe('getFromFile', () => {
         expect(error).toEqual(new errors.MissingArgError('v'));
       });
     });
+    describe('incorrect data', () => {
+      it('duplicate npcStory', async () => {
+        const pathname = path.join(__dirname, '../../sampleData/indexNoV.json');
+        let error: Error = { name: '', message: '' };
+        try {
+          const reader = new Reader(pathname);
+          await reader.init();
+        } catch (err) {
+          error = err as IFullError;
+        }
+        expect(error).toEqual(new errors.MissingArgError('v'));
+      });
+    });
   });
   describe('should pass', () => {
     const pathname = path.join(__dirname, '../../sampleData/index.json');

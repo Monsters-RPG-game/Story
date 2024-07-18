@@ -1,4 +1,4 @@
-import { ILine } from "./types";
+import type { ILine } from './types';
 
 export interface INpcStoryEntity {
   _id: string;
