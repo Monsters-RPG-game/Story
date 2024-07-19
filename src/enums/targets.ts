@@ -5,3 +5,8 @@ export enum ENpcStoryTargets {
   GetNpcStory = 'getNpcStory',
   GetNpcIntent = 'getNpcIntent',
 }
+
+export enum ENarratorStoryTargets {
+  GetNarratorStory = 'getNarratorStory',
+  GetByStageNarratorStory = 'getByStageNarratorStory',
+}

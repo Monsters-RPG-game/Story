@@ -1,0 +1,27 @@
+{
+  "episode": 2,
+  "stages": [
+    {
+      "stageNumber": 1,
+      "chapters": [
+        {
+          "chapter": 1,
+          "line": "some shjit"
+        },
+        {
+          "chapter": 2,
+          "line": "another shit"
+        }
+      ]
+    },
+    {
+      "stageNumber": 2,
+      "chapters": [
+        {
+          "chapter": 1,
+          "line": "blabla"
+        }
+      ]
+    }
+  ]
+}

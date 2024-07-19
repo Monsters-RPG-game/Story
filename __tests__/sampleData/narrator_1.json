@@ -1,0 +1,31 @@
+{
+  "episode": 1,
+  "stages": [
+    {
+      "stageNumber": 1,
+      "chapters": [
+        {
+          "chapter": 1,
+          "line": "This is the first line of the first chapter."
+        },
+        {
+          "chapter": 2,
+          "line": "This is the first line of the second chapter."
+        },
+        {
+          "chapter": 3,
+          "line": "This is the first line of the second chapter."
+        }
+      ]
+    },
+    {
+      "stageNumber": 2,
+      "chapters": [
+        {
+          "chapter": 1,
+          "line": "This is the first line of the first chapter of stage 2."
+        }
+      ]
+    }
+  ]
+}
