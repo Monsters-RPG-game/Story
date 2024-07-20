@@ -1,4 +1,4 @@
 export interface IUpdateFileVersionDto {
-  v: string;
+  version: string;
   id: string;
 }

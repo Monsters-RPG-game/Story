@@ -8,8 +8,8 @@ export default class Controller extends ControllerFactory<EModules.IndexFile> {
     super(new Rooster());
   }
 
-  async add(v: string): Promise<void> {
-    const payload = new AddFileVersionDto({ v });
+  async add(version: string): Promise<void> {
+    const payload = new AddFileVersionDto({ version });
     await this.rooster.add(payload);
   }
 }

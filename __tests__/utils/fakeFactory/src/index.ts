@@ -1,17 +1,24 @@
-// import FakeInventory from './inventory';
+import FakeNpcStory from './npcStory';
+import FakeFileVersion from './fileVersion';
 
 export default class FakeFactory {
-  // private readonly _user: FakeUser;
+  private readonly _npcStory: FakeNpcStory;
+  private readonly _fileVersion: FakeFileVersion;
 
   constructor() {
-    // this._user = new FakeUser();
+    this._npcStory = new FakeNpcStory();
+    this._fileVersion = new FakeFileVersion();
   }
 
-  // get user(): FakeUser {
-  //   return this._user;
-  // }
+  public get npcStory(): FakeNpcStory {
+    return this._npcStory;
+  }
+  public get fileVersion(): FakeFileVersion {
+    return this._fileVersion;
+  }
 
   async cleanUp(): Promise<void> {
-    // await this.user.cleanUp();
+    await this.npcStory.cleanUp();
+    await this.fileVersion.cleanUp();
   }
 }

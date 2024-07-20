@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import type { IFile } from './types';
 
 export const fileVersionSchema = new mongoose.Schema({
-  v: {
+  version: {
     type: String,
   },
 });

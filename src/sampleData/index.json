@@ -1,5 +1,5 @@
 {
-  "v": "0.0.2",
+  "version": "0.0.7",
   "npc": [
     {
       "6465bd2cc9f753720afeeaa9": "npc1.json"
@@ -8,8 +8,13 @@
     { "6465bd2cc9f753720afeeaa1": "npc3.json" }
   ],
   "narrator": {
-    "episodes": {
-      "1": "narrator_1.json"
-    }
+    "episodes": [
+      {
+        "1": "narrator_1.json"
+      },
+      {
+        "2": "narrator_2.json"
+      }
+    ]
   }
 }

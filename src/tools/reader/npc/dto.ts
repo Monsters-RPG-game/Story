@@ -1,6 +1,7 @@
 import LineDto from './line.dto';
 import Validation from '../../validation';
-import type { ILine, INpcStoryEntity } from '../../../modules/npcStory/entity';
+import type { INpcStoryEntity } from '../../../modules/npcStory/entity';
+import type { ILine } from '../../../modules/npcStory/types';
 
 export default class NpcEntityDto implements Omit<INpcStoryEntity, '_id'> {
   name: string;

@@ -1,23 +1,12 @@
-export interface IChapter {
-  [key: number]: string;
-}
-
-export interface IStage {
-  [key: number]: IChapter;
-}
-export interface INarratorEntity {
-  stage: IStage[];
-}
-export interface INpcEntry {
-  [id: string]: string;
-}
+import type { INpcEntry } from './types';
+import type { INarratorEntry } from '../narratorStory/types';
 
 export interface IFileEntity {
-  v: string;
+  version: string;
   npc: INpcEntry[];
-  narrator: INarratorEntity;
+  narrator: INarratorEntry;
 }
 export interface IFileEntityVersion {
   _id: string;
-  v: string;
+  version: string;
 }

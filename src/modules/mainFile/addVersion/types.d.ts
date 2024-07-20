@@ -1,3 +1,3 @@
 export interface IAddFileVersionDto {
-  v: string;
+  version: string;
 }

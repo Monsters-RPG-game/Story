@@ -8,7 +8,7 @@ export default class Controller extends ControllerFactory<EModules.IndexFile> {
     super(new Rooster());
   }
 
-  async get(): Promise<IFileEntityVersion|null> {
+  async get(): Promise<IFileEntityVersion | null> {
     return this.rooster.getFirst();
   }
 }

@@ -1,22 +1,8 @@
-export interface ILine {
-  intent: string;
-  line: string;
-}
+import type { ILine } from './types';
 
 export interface INpcStoryEntity {
   _id: string;
   name: string;
   npcId: string;
   lines: ILine[];
-}
-
-export interface IChapter {
-  [key: number]: string;
-}
-
-export interface IStage {
-  [key: number]: IChapter;
-}
-export interface INarratorEntity {
-  stage: IStage[];
 }

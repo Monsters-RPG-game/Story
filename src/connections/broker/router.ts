@@ -21,6 +21,8 @@ export default class Router {
     switch (payload.target) {
       case enums.EMessageTargets.NpcStory:
         return this.handler.npcStoryMessage(payload);
+      case enums.EMessageTargets.NarratorStory:
+        return this.handler.narratorStoryMessage(payload);
       default:
         throw new errors.IncorrectTargetError();
     }

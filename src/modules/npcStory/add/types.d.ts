@@ -1,4 +1,4 @@
-import { ILine } from '../entity';
+import type { ILine } from '../types';
 
 export interface IAddNpcStoryDto {
   name: string;

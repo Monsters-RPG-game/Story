@@ -14,6 +14,6 @@ export default class Controller extends ControllerFactory<EModules.IndexFile> {
     const payload = new UpdateFileVersionDto(data);
     const exist = await this.rooster.get(payload.id);
     if (!exist) throw new errors.FileDoesNotExist();
-    await this.rooster.update(payload.id, { v: payload.v });
+    await this.rooster.update(payload.id, { version: payload.version });
   }
 }

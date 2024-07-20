@@ -1,6 +1,6 @@
 import Validation from '../../../tools/validation';
 import type { IAddNpcStoryDto } from './types';
-import type { ILine } from '../entity';
+import type { ILine } from '../types';
 
 export default class AddNpcStoryDto implements IAddNpcStoryDto {
   name: string;

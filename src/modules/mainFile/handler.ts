@@ -26,8 +26,6 @@ export default class MainFileHandler extends HandlerFactory<EModules.IndexFile> 
 
   async get(): Promise<IFileEntityVersion | null> {
     return this.getController.get();
-    // const callBack = await this.getController.get(payload as IGetProfileDto);
-    // return State.broker.send(user.tempId, callBack, enums.EMessageTypes.Send);
   }
 
   async add(v: string): Promise<void> {

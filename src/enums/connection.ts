@@ -21,4 +21,5 @@ export enum EAmqQueues {
 
 export enum EMessageTargets {
   NpcStory = 'npcStory',
+  NarratorStory = 'narratorStory',
 }

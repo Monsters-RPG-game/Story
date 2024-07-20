@@ -1,6 +1,6 @@
 {
   "name": "story",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Story",
   "productName": "Story",
   "author": "https://github.com/marcin-nedza",
@@ -22,9 +22,7 @@
     "test:e2e": "jest --runInBand --config __tests__/jest.config.e2e.ts",
     "test:unit": "jest --config __tests__/jest.config.unit.ts",
     "test:db": "jest --runInBand --config __tests__/jest.config.db.ts",
-    "generate": "npx module-generator",
-    "migrate": "node src/migrations/index.js",
-    "migrate:dev": "cross-env NODE_ENV=dev node build/src/migrations/index.js"
+    "generate": "npx module-generator"
   },
   "lint-staged": {
     "*.ts": [
