@@ -234,3 +234,12 @@ export class EpisodeNumberIncorrect extends FullError {
     this.status = 400;
   }
 }
+export class CouldNotReadFile extends FullError {
+  constructor() {
+    super('CouldNotReadFile');
+    this.message = 'Could not read file';
+    this.name = 'CouldNotReadFile';
+    this.code = '024';
+    this.status = 400;
+  }
+}

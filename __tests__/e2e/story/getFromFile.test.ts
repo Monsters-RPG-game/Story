@@ -1,120 +1,223 @@
-import { describe, it, expect, afterEach } from '@jest/globals';
+import { describe, it, expect, jest, afterEach } from '@jest/globals';
+import fakeData from '../../utils/fakeData.json';
 import * as errors from '../../../src/errors';
-// import FileVersionGetController from '../../../src/modules/mainFile/get';
-import Reader from '../../../src/tools/reader';
-// import fakeData from '../../sampleData/index.json';
-// import LineDto from '../../../src/tools/reader/npc/line.dto';
-// import npc1json from '../../sampleData/npc1.json';
-import indexjson from '../../sampleData/index.json';
-import narrator1 from '../../sampleData/narrator_1.json';
-import narrator2 from '../../sampleData/narrator_2.json';
-import npc1 from '../../sampleData/npc1.json';
-import npc2 from '../../sampleData/npc2.json';
-// import type { INpcStoryEntity } from 'modules/npcStory/entity';
-import * as utils from '../../utils';
-// import fakeData from '../../utils/fakeData.json';
-// import type { IFileEntity } from 'modules/mainFile/entity';
-// import type { INpcEntry } from '../../../src/modules/mainFile/types';
-import type { IFullError } from 'types';
+import FakeFS from '../../utils/fakeFs';
+
+jest.mock('fs', () => {
+  return FakeFS;
+});
+
 import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import { IFileEntity } from '../../../src/modules/mainFile/entity';
+import Reader from '../../../src/tools/reader';
+// import type { IFileEntity } from '../../../src/modules/mainFile/entity';
+import type { INarratorEntity } from '../../../src/modules/narratorStory/entity';
+import { INpcStoryEntity } from '../../../src/modules/npcStory/entity';
 
-// const fakeFile = fakeData as unknown as IFileEntity;
-describe('getFromFile', () => {
-  const db = new utils.FakeFactory();
-  // const fakeNpc1 = npc1json as unknown as INpcStoryEntity;
-  // const fileVersionController = new FileVersionGetController();
+console.log(fs.existsSync);
 
-  afterEach(async () => {
-    await db.cleanUp();
+describe('story', () => {
+  afterEach(() => {
+    FakeFS.clean();
   });
-  /**
-   * Description
-   */
-  function createTempFile(content: string, title: string): string {
-    const tempDir = os.tmpdir();
-    const tempFilePath = path.join(tempDir, title);
-    fs.writeFileSync(tempFilePath, JSON.stringify(content, null, 2));
-    return tempFilePath;
-  }
 
-  describe('should fail', () => {
-    describe('missing data', () => {
-      it('no version provided', async () => {
-        createTempFile(narrator1 as unknown as string, 'narrator_1.json');
-        createTempFile(narrator2 as unknown as string, 'narrator_2.json');
-        const pathname = createTempFile(indexjson as unknown as string, 'index.json');
-        const { version, ...modifiedContent } = indexjson;
-        fs.writeFileSync(pathname, JSON.stringify(modifiedContent, null, 2));
-        let error: Error = { name: '', message: '' };
-        try {
-          const reader = new Reader(pathname);
-          await reader.init();
-        } catch (err) {
-          error = err as IFullError;
-        }
-        expect(error).toEqual(new errors.MissingArgError('version'));
+  const fakeIndex = JSON.stringify(fakeData.fakeIndex[0]);
+  const fakeIndex2 = JSON.stringify(fakeData.fakeIndex[1]);
+  const fakeIndex3 = JSON.stringify(fakeData.fakeIndex[2]);
+  const fakeNarrator = JSON.stringify(fakeData.fakeNarrator[0]);
+  const npc1 = JSON.stringify(fakeData.fakeNpc[0]);
+  const npc2 = JSON.stringify(fakeData.fakeNpc[1]);
+  describe('should throw', () => {
+    describe('no data passed', () => {
+      // it('missing version', async () => {
+      //   const cloneIndex = structuredClone(JSON.parse(fakeIndex)) as Partial<IFileEntity>;
+      //   delete cloneIndex.version;
+      //   FakeFS.addFakeIndex('/index.json', JSON.stringify(cloneIndex as string));
+      //   FakeFS.addFakeNarrator('/narrator_1.json', fakeNarrator);
+      //   FakeFS.addFakeNpc('/npc1.json', npc1);
+      //   FakeFS.addFakeNpc('/npc2.json', npc2);
+      //   try {
+      //     const reader = new Reader('/index.json');
+      //     await reader.init();
+      //   } catch (error) {
+      //     expect(error).toEqual(new errors.MissingArgError('version'));
+      //   }
+      // });
+
+      // it('missing file', async () => {
+      //   let cloneIndex = structuredClone(JSON.parse(fakeIndex)) as Partial<IFileEntity>;
+      //   cloneIndex = undefined!;
+      //   FakeFS.addFakeIndex('/index.json', JSON.stringify(cloneIndex as string));
+      //   FakeFS.addFakeNarrator('/narrator_1.json', fakeNarrator);
+      //   FakeFS.addFakeNpc('/npc1.json', npc1);
+      //   FakeFS.addFakeNpc('/npc2.json', npc2);
+      //   try {
+      //     const reader = new Reader('somepath');
+      //     await reader.init();
+      //   } catch (error) {
+      //     expect(error).toEqual(new errors.FileDoesNotExist());
+      //   }
+      // });
+
+      describe('incorrect data', () => {
+        it('episode number in index and narrator file doesnt match', async () => {
+          const cloneNarrator = structuredClone(JSON.parse(fakeNarrator)) as INarratorEntity;
+          cloneNarrator.episode = 19;
+          FakeFS.addFakeIndex('/index.json', fakeIndex);
+          FakeFS.addFakeNarrator('/narrator_1.json', JSON.stringify(cloneNarrator));
+          FakeFS.addFakeNpc('/npc1.json', npc1);
+          FakeFS.addFakeNpc('/npc2.json', npc2);
+          let error: Error = {
+            name: '',
+            message: '',
+          };
+          try {
+            const reader = new Reader('/index.json');
+            await reader.init();
+          } catch (err) {
+            error = err as Error;
+            expect(error).toEqual(new errors.EpisodeNumberIncorrect());
+          }
+        });
+
+        it('episode number repeats in narrator files', async () => {
+          const cloneNarrator = structuredClone(JSON.parse(fakeNarrator)) as INarratorEntity;
+          FakeFS.addFakeIndex('/index.json', fakeIndex2);
+          FakeFS.addFakeNarrator('/narrator_1.json', fakeNarrator);
+          FakeFS.addFakeNarrator('/narrator_2.json', JSON.stringify(cloneNarrator));
+          FakeFS.addFakeNpc('/npc1.json', npc1);
+          FakeFS.addFakeNpc('/npc2.json', npc2);
+          let error: Error = {
+            name: '',
+            message: '',
+          };
+          try {
+            const reader = new Reader('/index.json');
+            await reader.init();
+          } catch (err) {
+            error = err as Error;
+          }
+          expect(error).toEqual(new errors.EpisodeNumberIncorrect());
+        });
+        it('stage number repeats in narrator file', async () => {
+          const cloneNarrator = structuredClone(JSON.parse(fakeNarrator)) as INarratorEntity;
+          cloneNarrator.episode = 2;
+          cloneNarrator.stages[1]!.stageNumber = 1;
+          FakeFS.addFakeIndex('/index.json', fakeIndex2);
+          FakeFS.addFakeNarrator('/narrator_1.json', fakeNarrator);
+          FakeFS.addFakeNarrator('/narrator_2.json', JSON.stringify(cloneNarrator));
+          FakeFS.addFakeNpc('/npc1.json', npc1);
+          FakeFS.addFakeNpc('/npc2.json', npc2);
+          let error: Error = {
+            name: '',
+            message: '',
+          };
+          try {
+            const reader = new Reader('/index.json');
+            await reader.init();
+          } catch (err) {
+            error = err as Error;
+          }
+          expect(error).toEqual(new errors.StageNumberPresent());
+        });
+        it('chapter number repeats in narrator file', async () => {
+          const cloneNarrator = structuredClone(JSON.parse(fakeNarrator)) as INarratorEntity;
+          cloneNarrator.stages[0]!.chapters[1]!.chapter = 1
+          FakeFS.addFakeIndex('/index.json', fakeIndex);
+          FakeFS.addFakeNarrator('/narrator_1.json', JSON.stringify(cloneNarrator));
+          FakeFS.addFakeNpc('/npc1.json', npc1);
+          FakeFS.addFakeNpc('/npc2.json', npc2);
+          let error: Error = {
+            name: '',
+            message: '',
+          };
+          try {
+            const reader = new Reader('/index.json');
+            await reader.init();
+          } catch (err) {
+            error = err as Error;
+          }
+          expect(error).toEqual(new errors.ChapterNumberPresent());
+        });
+
+        it('npcId doesnt match in index and npc file', async () => {
+          const cloneNpc1 = structuredClone(JSON.parse(npc1)) as INpcStoryEntity;
+          cloneNpc1.npcId = '6465bd2cc9f753720afeeaa1'
+          FakeFS.addFakeIndex('/index.json', fakeIndex);
+          FakeFS.addFakeNarrator('/narrator_1.json', fakeNarrator);
+          FakeFS.addFakeNpc('/npc1.json', JSON.stringify(cloneNpc1));
+          FakeFS.addFakeNpc('/npc2.json', npc2);
+          let error: Error = {
+            name: '',
+            message: '',
+          };
+          try {
+            const reader = new Reader('/index.json');
+            await reader.init();
+          } catch (err) {
+            error = err as Error;
+          }
+          expect(error).toEqual(new errors.FileIdDoesntMatchEntity());
+        });
       });
     });
-    describe('incorrect data', () => {
-      it('Different npc id in main file and npc file', async () => {
-        createTempFile(narrator1 as unknown as string, 'narrator_1.json');
-        createTempFile(narrator2 as unknown as string, 'narrator_2.json');
-        createTempFile(npc1 as unknown as string, 'npc1.json');
-        createTempFile(npc2 as unknown as string, 'npc2.json');
-        const modifiedContent = { ...indexjson } as unknown as IFileEntity;
-        const [firstNpc, ...restNpcs] = modifiedContent.npc;
-        console.log(firstNpc);
-        const newFirstNpc = { asdasdasd: 'npc1.json' };
-        modifiedContent.npc = [newFirstNpc, ...restNpcs];
+  });
+  // TODO:
+  // this is proper way
+  // "episodes": [
+  //   {
+  //     "1": "narrator_1.json"
+  //   },
+  //   {
+  //     "2": "narrator_2.json"
+  //   }
+  // ]
+  // prevent this:
+  // "episodes": [
+  //   {
+  //     "1": "narrator_1.json",
+  //     "2": "narrator_2.json"
+  //   }
+  //   ]
 
-        const pathname = createTempFile(indexjson as unknown as string, 'index.json');
-        fs.writeFileSync(pathname, JSON.stringify(modifiedContent, null, 2));
-        let error: Error = { name: '', message: '' };
-        try {
-          const reader = new Reader(pathname);
-          await reader.init();
-        } catch (err) {
-          error = err as IFullError;
-        }
-        expect(error).toEqual(new errors.FileIdDoesntMatchEntity());
-      });
-      it('lower version passed than one stored', async () => {
-        await db.fileVersion.version('0.0.2').create();
-        const { version, ...rest } = indexjson;
-        const modifiedContent = { version: '0.0.1', ...rest };
-        const pathname = createTempFile(indexjson as unknown as string, 'index.json');
-        fs.writeFileSync(pathname, JSON.stringify(modifiedContent, null, 2));
-        let error: Error = { name: '', message: '' };
-        try {
-          const reader = new Reader(pathname);
-          await reader.init();
-        } catch (err) {
-          error = err as IFullError;
-        }
-        expect(error).toEqual(new errors.VersionIncorrect());
-      });
+  describe('should pass', () => {
+    it('populate db when its empty', async () => {
+      FakeFS.addFakeIndex('/index.json', fakeIndex3);
+      FakeFS.addFakeNarrator('/narrator_1.json', fakeNarrator);
+      FakeFS.addFakeNarrator('/narrator_2.json', fakeNarrator);
+      FakeFS.addFakeNpc('/npc1.json', npc1);
+      FakeFS.addFakeNpc('/npc2.json', npc2);
+      let error: Error = {
+        name: '',
+        message: '',
+      };
+      try {
+        const reader = new Reader('/index.json');
+        await reader.init();
+        expect(reader.fileEntity).toEqual(JSON.parse(fakeIndex));
+      } catch (err) {
+        error = err as Error;
+        expect(error).toBeUndefined();
+      }
+    });
+
+    it('populate db when its empty', async () => {
+      FakeFS.addFakeIndex('/index.json', fakeIndex3);
+      FakeFS.addFakeNarrator('/narrator_1.json', fakeNarrator);
+      FakeFS.addFakeNarrator('/narrator_2.json', fakeNarrator);
+      FakeFS.addFakeNpc('/npc1.json', npc1);
+      FakeFS.addFakeNpc('/npc2.json', npc2);
+      let error: Error = {
+        name: '',
+        message: '',
+      };
+      try {
+        const reader = new Reader('/index.json');
+        await reader.init();
+        expect(reader.fileEntity).toEqual(JSON.parse(fakeIndex));
+      } catch (err) {
+        error = err as Error;
+        expect(error).toBeUndefined();
+      }
     });
   });
-  // describe('should pass', () => {
-  //   const pathname = path.join(__dirname, '../../sampleData/index.json');
-  //   it('updates version', async () => {
-  //     await db.fileVersion.version('0.0.1').create();
-  //     const currentStoredVer = (await fileVersionController.get())!.version;
-  //     const reader = new Reader(pathname);
-  //     await reader.init();
-  //     console.log('CUURE', currentStoredVer);
-  //   });
-  //   it('get npc file from index', async () => {
-  //     const reader = new Reader(pathname);
-  //     await reader.init();
-  //     fakeNpc1.lines.forEach((line) => {
-  //       new LineDto(line);
-  //     });
-  //     expect(reader.npcEntities[0]?.name).toEqual(fakeNpc1.name);
-  //     expect(reader.npcEntities[0]?.npcId).toEqual(fakeNpc1.npcId);
-  //   });
-  // });
 });

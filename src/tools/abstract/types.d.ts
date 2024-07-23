@@ -11,6 +11,9 @@ import type { IAddNpcStoryDto } from '../../modules/npcStory/add/types';
 import type { INpcStoryEntity } from '../../modules/npcStory/entity';
 import type NpcStoryGet from '../../modules/npcStory/get';
 import type NpcStoryRooster from '../../modules/npcStory/rooster';
+import type UserCompletionRooster from '../../modules/userCompletion/rooster';
+import type { IAddUserCompletionDto } from '../../modules/userCompletion/add/types';
+import type { IUserCompletionEntity } from '../../modules/userCompletion/entity';
 
 export interface IModulesGetControllers {
   [EModules.NpcStory]: NpcStoryGet;
@@ -22,29 +25,34 @@ export interface IModulesControllers {
   [EModules.NpcStory]: NpcStoryRooster;
   [EModules.IndexFile]: FileVersionRooster;
   [EModules.NarratorStory]: NarratorStoryRooster;
+  [EModules.UserCompletion]: UserCompletionRooster;
 }
 
 export interface IRoosterAddData {
   [EModules.NpcStory]: IAddNpcStoryDto;
   [EModules.IndexFile]: IAddFileVersionDto;
   [EModules.NarratorStory]: IAddNarratorStoryDto;
+  [EModules.UserCompletion]: IAddUserCompletionDto;
 }
 
 export interface IRoosterAddDefaultData {
   [EModules.NpcStory]: Partial<INpcStoryEntity>;
   [EModules.IndexFile]: Partial<IFileEntityVersion>;
   [EModules.NarratorStory]: Partial<INarratorEntity>;
+  [EModules.UserCompletion]: Partial<IUserCompletionEntity>;
 }
 
 export interface IRoosterUpdate extends IRoosterAddDefaultData {
   [EModules.NpcStory]: Partial<INpcStoryEntity>;
   [EModules.IndexFile]: Partial<IFileEntityVersion>;
+  [EModules.UserCompletion]: Partial<IUserCompletionEntity>;
 }
 
 export interface IRoosterGetData {
   [EModules.NpcStory]: INpcStoryEntity | null;
   [EModules.IndexFile]: IFileEntityVersion | null;
   [EModules.NarratorStory]: INarratorEntity | null;
+  [EModules.UserCompletion]: IUserCompletionEntity | null;
 }
 
 export interface IRoosterFactory<Z extends EModules> {

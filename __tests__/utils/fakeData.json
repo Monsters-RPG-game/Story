@@ -3,7 +3,113 @@
     {
       "6465bd2cc9f753720afeeaf2": "npc1.json"
     },
-    { "6465bd2cc9f753720afeeaa2": "npc2.json" },
-    { "6465bd2cc9f753720afeeaa1": "npc3.json" }
+    { "6465bd2cc9f753720afeeaa2": "npc2.json" }
+  ],
+  "fakeIndex": [
+    {
+      "version": "0.0.2",
+      "npc": [
+        {
+          "6465bd2cc9f753720afeeaa9": "npc1.json"
+        },
+        { "6465bd2cc9f753720afeeaa2": "npc2.json" }
+      ],
+      "narrator": {
+        "episodes": [
+          {
+            "1": "narrator_1.json"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.0.2",
+      "npc": [
+        {
+          "6465bd2cc9f753720afeeaa9": "npc1.json"
+        },
+        { "6465bd2cc9f753720afeeaa2": "npc2.json" }
+      ],
+      "narrator": {
+        "episodes": [
+          {
+            "1": "narrator_1.json"
+          },
+          {
+            "2": "narrator_2.json"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.0.2",
+      "npc": [
+        {
+          "6465bd2cc9f753720afeeaa9": "npc1.json"
+        },
+        { "6465bd2cc9f753720afeeaa2": "npc2.json" }
+      ],
+      "narrator": {
+        "episodes": [
+          {
+            "1": "narrator_1.json",
+            "2": "narrator_2.json"
+          }
+        ]
+      }
+    }
+  ],
+  "fakeNarrator": [
+    {
+      "episode": 1,
+      "stages": [
+        {
+          "stageNumber": 1,
+          "chapters": [
+            {
+              "chapter": 1,
+              "line": "This is the first line of the first chapter."
+            },
+            {
+              "chapter": 2,
+              "line": "This is the first line of the second chapter."
+            },
+            {
+              "chapter": 3,
+              "line": "This is the first line of the second chapter."
+            }
+          ]
+        },
+        {
+          "stageNumber": 2,
+          "chapters": [
+            {
+              "chapter": 1,
+              "line": "This is the first line of the first chapter of stage 2."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fakeNpc": [
+    {
+      "npcId": "6465bd2cc9f753720afeeaa9",
+      "name": "Clarence",
+      "lines": [
+        { "welcome": "Cześć. Jestem jacek. Lubie jeść gruszki" },
+        { "store": "Chcesz zobaczyć moje towary ?" },
+        { "end": "Do zobaczenia" }
+      ]
+    },
+    {
+      "npcId": "6465bd2cc9f753720afeeaa2",
+      "name": "Stefan",
+      "lines": [
+        { "welcome": "Cześć. Jestem Stefan. Lubie placki" },
+        { "store": "Chcesz zobaczyć moje cycki ?" },
+        { "end": "Do zobaczenia" }
+      ]
+    }
   ]
 }

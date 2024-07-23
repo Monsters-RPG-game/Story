@@ -146,7 +146,8 @@ export default class Reader {
        */
       const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', episodeFile);
 
-      const entry = this.readNarratorEntity(newFilePathName, 2);
+      const entry = this.readNarratorEntity(newFilePathName);
+      if (!entry) throw new errors.CouldNotReadFile();
       if (entry.episode !== parseInt(episodeNr)) {
         throw new errors.EpisodeNumberIncorrect();
       }
@@ -206,6 +207,9 @@ export default class Reader {
      */
     const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', npcFileName[0]!);
     const entry = this.readNpcEntity(newFilePathName);
+    if (!entry) {
+      throw new errors.CouldNotReadFile();
+    }
     if (npcId !== entry.npcId) {
       throw new errors.FileIdDoesntMatchEntity();
     }
@@ -214,11 +218,19 @@ export default class Reader {
   }
 
   readFileEntity(path: string): IFileEntity | undefined {
-    return JSON.parse(fs.readFileSync(path, 'utf8')) as IFileEntity;
+    try {
+      return JSON.parse(fs.readFileSync(path, 'utf8')) as IFileEntity;
+    } catch (error) {
+      return undefined;
+    }
   }
 
-  readNpcEntity(path: string): Omit<INpcStoryEntity, '_id'> {
-    return JSON.parse(fs.readFileSync(path, 'utf8')) as Omit<INpcStoryEntity, '_id'>;
+  readNpcEntity(path: string): Omit<INpcStoryEntity, '_id'> | undefined {
+    try {
+      return JSON.parse(fs.readFileSync(path, 'utf8')) as Omit<INpcStoryEntity, '_id'>;
+    } catch (error) {
+      return undefined;
+    }
   }
 
   /**
@@ -244,7 +256,12 @@ export default class Reader {
     return 0;
   }
 
-  readNarratorEntity(path: string, _epNumber: number): Omit<INarratorEntity, '_id'> {
-    return JSON.parse(fs.readFileSync(path, 'utf8')) as Omit<INarratorEntity, '_id'>;
+  readNarratorEntity(path: string): Omit<INarratorEntity, '_id'> | undefined {
+    try {
+      const file = JSON.parse(fs.readFileSync(path, 'utf8')) as Omit<INarratorEntity, '_id'>;
+      return file;
+    } catch (error) {
+      return undefined;
+    }
   }
 }

@@ -1,9 +1,0 @@
-{
-  "npcId": "6465bd2cc9f753720afeeaa2",
-  "name": "Stefan",
-  "lines": [
-    { "welcome": "Cześć. Jestem Stefan. Lubie placki" },
-    { "store": "Chcesz zobaczyć moje cycki ?" },
-    { "end": "Do zobaczenia" }
-  ]
-}
