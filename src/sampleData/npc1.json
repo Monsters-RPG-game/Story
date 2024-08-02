@@ -1,9 +1,0 @@
-{
-  "npcId": "6465bd2cc9f753720afeeaa9",
-  "name": "Clarence",
-  "lines": [
-    { "welcome": "Cześć. Jestem jacek. Lubie jeść gruszki" },
-    { "store": "Chcesz zobaczyć moje towary ?" },
-    { "end": "Do zobaczenia" }
-  ]
-}

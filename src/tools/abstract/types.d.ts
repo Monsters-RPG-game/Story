@@ -11,14 +11,16 @@ import type { IAddNpcStoryDto } from '../../modules/npcStory/add/types';
 import type { INpcStoryEntity } from '../../modules/npcStory/entity';
 import type NpcStoryGet from '../../modules/npcStory/get';
 import type NpcStoryRooster from '../../modules/npcStory/rooster';
-import type UserCompletionRooster from '../../modules/userCompletion/rooster';
 import type { IAddUserCompletionDto } from '../../modules/userCompletion/add/types';
 import type { IUserCompletionEntity } from '../../modules/userCompletion/entity';
+import type UserCompletionGet from '../../modules/userCompletion/get';
+import type UserCompletionRooster from '../../modules/userCompletion/rooster';
 
 export interface IModulesGetControllers {
   [EModules.NpcStory]: NpcStoryGet;
   [EModules.IndexFile]: FileVersionGet;
   [EModules.NarratorStory]: NarratorStoryGet;
+  [EModules.UserCompletion]: UserCompletionGet;
 }
 
 export interface IModulesControllers {

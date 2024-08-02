@@ -10,3 +10,7 @@ export enum ENarratorStoryTargets {
   GetNarratorStory = 'getNarratorStory',
   GetByStageNarratorStory = 'getByStageNarratorStory',
 }
+export enum EUserCompletionTargets {
+  AddUserCompletion = 'addUserCompletion',
+  GetUserCompletion = 'getUserCompletion',
+}

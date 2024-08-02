@@ -17,12 +17,14 @@ export default class Router {
 
   async handleMessage(payload: types.IRabbitMessage): Promise<void> {
     this.logNewMessage(payload);
-
+     console.log('payload',payload)
     switch (payload.target) {
       case enums.EMessageTargets.NpcStory:
         return this.handler.npcStoryMessage(payload);
       case enums.EMessageTargets.NarratorStory:
         return this.handler.narratorStoryMessage(payload);
+      case enums.EMessageTargets.UserCompletion:
+        return this.handler.userCompletionMessage(payload);
       default:
         throw new errors.IncorrectTargetError();
     }
