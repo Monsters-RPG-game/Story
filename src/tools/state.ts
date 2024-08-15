@@ -5,6 +5,7 @@ import type { IState } from '../types';
 class State implements IState {
   private _broker: Broker | null = null;
 
+  private _mongo: Mongo | null = null;
   get broker(): Broker {
     return this._broker!;
   }
@@ -12,8 +13,6 @@ class State implements IState {
   set broker(value: Broker) {
     this._broker = value;
   }
-
-  private _mongo: Mongo | null = null;
 
   get mongo(): Mongo {
     return this._mongo!;

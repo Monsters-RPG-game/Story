@@ -11,10 +11,6 @@ export default class Rooster extends RoosterFactory<INpcStory, typeof NpcStory, 
     super(NpcStory);
   }
 
-  async addMany(npcEntities: Omit<INpcStoryEntity, '_id'>[]): Promise<void> {
-    await this.model.insertMany(npcEntities);
-  }
-
   async getIntent(data: IGetNpcIntentDto): Promise<ILine | null> {
     const result = await this.model.aggregate([
       {
@@ -40,6 +36,9 @@ export default class Rooster extends RoosterFactory<INpcStory, typeof NpcStory, 
       },
     ]);
     return !result || result.length === 0 ? null : (result[0] as ILine);
+  }
+  async addMany(npcEntities: Omit<INpcStoryEntity, '_id'>[]): Promise<void> {
+    await this.model.insertMany(npcEntities);
   }
 
   async updateMany(npcEntities: Omit<INpcStoryEntity, '_id'>[]): Promise<void> {
