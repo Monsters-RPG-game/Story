@@ -27,45 +27,89 @@ export default class Reader {
     this._narratorStoryHandler = new NarratorStoryHandler();
   }
 
-  public get path(): string {
-    return this._path;
-  }
-
-  public get fileHandler(): FileVersionHandler {
-    return this._fileHandler;
-  }
-
-  public get npcStoryHandler(): NpcStoryHandler {
-    return this._npcStoryHandler;
-  }
-
-  public get narratorStoryHandler(): NarratorStoryHandler {
-    return this._narratorStoryHandler;
-  }
-  public get fileEntity(): IFileEntity {
+  get fileEntity(): IFileEntity {
     return this._fileEntity as IFileEntity;
   }
 
-  public set fileEntity(value: IFileEntity) {
+  set fileEntity(value: IFileEntity) {
     this._fileEntity = value;
   }
 
-  public get npcEntities(): Omit<INpcStoryEntity, '_id'>[] {
+  get npcEntities(): Omit<INpcStoryEntity, '_id'>[] {
     return this._npcEntities;
   }
 
-  public set npcEntities(value: Omit<INpcStoryEntity, '_id'>[]) {
+  set npcEntities(value: Omit<INpcStoryEntity, '_id'>[]) {
     this._npcEntities = value;
   }
 
-  public get narratorEntities(): Omit<INarratorEntity, '_id'>[] {
+  get narratorEntities(): Omit<INarratorEntity, '_id'>[] {
     return this._narratorEntities;
   }
 
-  public set narratorEntities(value: Omit<INarratorEntity, '_id'>[]) {
+  set narratorEntities(value: Omit<INarratorEntity, '_id'>[]) {
     this._narratorEntities = value;
   }
 
+  get path(): string {
+    return this._path;
+  }
+
+  get fileHandler(): FileVersionHandler {
+    return this._fileHandler;
+  }
+
+  get npcStoryHandler(): NpcStoryHandler {
+    return this._npcStoryHandler;
+  }
+
+  get narratorStoryHandler(): NarratorStoryHandler {
+    return this._narratorStoryHandler;
+  }
+
+  getNarratorFromFile(): void {
+    this.fileEntity.narrator.episodes.forEach((episode) => {
+      const episodeNr = Object.keys(episode)[0];
+      if (!episodeNr) throw new errors.EpisodeNumberNotExist();
+
+      const episodeFile = Object.values(episode)[0];
+      if (!episodeFile) throw new errors.EpisodeFileNotExist();
+      /**
+       * We create path to each narrator file based on main path.
+       */
+      const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', episodeFile);
+
+      const entry = this.readNarratorEntity(newFilePathName, 2);
+      if (entry.episode !== parseInt(episodeNr)) {
+        throw new errors.EpisodeNumberIncorrect();
+      }
+
+      const newStages = entry.stages.map((el) => {
+        return new StageDto(el);
+      });
+
+      const newNarrator: Omit<INarratorEntity, '_id'> = {
+        episode: parseInt(episodeNr),
+        stages: newStages,
+      };
+      this.narratorEntities.push(newNarrator);
+    });
+  }
+  getNpcFromFile(npcEntry: INpcEntry): void {
+    const npcId = Object.keys(npcEntry)[0];
+    const npcFileName = Object.values(npcEntry);
+
+    /**
+     * We create path to each npc file based on main path.
+     */
+    const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', npcFileName[0]!);
+    const entry = this.readNpcEntity(newFilePathName);
+    if (npcId !== entry.npcId) {
+      throw new errors.FileIdDoesntMatchEntity();
+    }
+
+    this.npcEntities.push(entry);
+  }
   async init(): Promise<void> {
     const file = this.readFileEntity(this.path);
     if (!file) {
@@ -75,7 +119,7 @@ export default class Reader {
     this.getNarratorFromFile();
     /**
      * We check if there is any main file stored,
-     * if not then we populate db
+     * if not then we populate db.
      */
     const storedVersion = await this.fileHandler.get();
     if (!storedVersion) {
@@ -88,7 +132,7 @@ export default class Reader {
     /**
      * If file is present in db and version stored is different
      * than one provided, we update version,
-     * delete all records and create npc all over again
+     * delete all records and create npc all over again.
      */
     if (storedVersion && storedVersion.version !== this.fileEntity.version) {
       const value = this.compareVersion(storedVersion.version, this.fileEntity.version);
@@ -134,39 +178,10 @@ export default class Reader {
     return version;
   }
 
-  getNarratorFromFile(): void {
-    this.fileEntity.narrator.episodes.forEach((episode) => {
-      const episodeNr = Object.keys(episode)[0];
-      if (!episodeNr) throw new errors.EpisodeNumberNotExist();
-
-      const episodeFile = Object.values(episode)[0];
-      if (!episodeFile) throw new errors.EpisodeFileNotExist();
-      /**
-       * We create path to each narrator file based on main path
-       */
-      const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', episodeFile);
-
-      const entry = this.readNarratorEntity(newFilePathName, 2);
-      if (entry.episode !== parseInt(episodeNr)) {
-        throw new errors.EpisodeNumberIncorrect();
-      }
-
-      const newStages = entry.stages.map((el) => {
-        return new StageDto(el);
-      });
-
-      const newNarrator: Omit<INarratorEntity, '_id'> = {
-        episode: parseInt(episodeNr),
-        stages: newStages,
-      };
-      this.narratorEntities.push(newNarrator);
-    });
-  }
-
   checkNarratorConsitency(): void {
     /**
-     * stageCount - checks for reapeting stage numbers
-     * episodeCount - checks for reapeting episode numbers
+     * StageCount - checks for reapeting stage numbers
+     * episodeCount - checks for reapeting episode numbers.
      */
     const episodeCount: number[] = [];
     this.narratorEntities.map((el) => {
@@ -197,22 +212,6 @@ export default class Reader {
     });
   }
 
-  getNpcFromFile(npcEntry: INpcEntry): void {
-    const npcId = Object.keys(npcEntry)[0];
-    const npcFileName = Object.values(npcEntry);
-
-    /**
-     * We create path to each npc file based on main path
-     */
-    const newFilePathName = this.path.split('/').slice(0, -1).join('/').concat('/', npcFileName[0]!);
-    const entry = this.readNpcEntity(newFilePathName);
-    if (npcId !== entry.npcId) {
-      throw new errors.FileIdDoesntMatchEntity();
-    }
-
-    this.npcEntities.push(entry);
-  }
-
   readFileEntity(path: string): IFileEntity | undefined {
     return JSON.parse(fs.readFileSync(path, 'utf8')) as IFileEntity;
   }
@@ -222,10 +221,10 @@ export default class Reader {
   }
 
   /**
-   * Compares two version strings in format 'x.y.z'
-   * @param version1 - the first version string
-   * @param version2 - the second version string
-   * @returns -1 if version1<version2 , 0 if version1=version2, 1 if version1>version2
+   * Compares two version strings in format 'x.y.z'.
+   * @param version1 - The first version string.
+   * @param version2 - The second version string.
+   * @returns -1 if version1<version2 , 0 if version1=version2, 1 if version1>version2.
    */
   compareVersion(version1: string, version2: string): number {
     const v1Parts = version1.split('.').map(Number);

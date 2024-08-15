@@ -26,7 +26,8 @@ export default abstract class RoosterFactory<T extends Document, U extends Model
   }
 
   /**
-   * Create element with default data
+   * Create element with default data.
+   * @param data
    */
   async addDefault(data: types.IRoosterAddDefaultData[Z]): Promise<string> {
     const newElement = new this.model(data);
